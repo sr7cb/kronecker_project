@@ -1,0 +1,6 @@
+deps/
+experiments/gemm/blis_sweep
+*.o
+*.a
+*.so
+*.csv
