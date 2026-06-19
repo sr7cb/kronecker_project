@@ -55,11 +55,11 @@ int main(int argc, char **argv) {
     printf("# MC KC NC GFLOPS\n");
 
     dim_t KCs[] = {64, 128, 160, 256, 384, 512};
-    dim_t MCs[] = {36, 72, 120, 152, 200, 256, 384};
+    dim_t MCs[] = {36, 72, 120, 152, 200, 256, 384, 448, 512, 640};
     dim_t NC    = 4080;
 
     for (int ki = 0; ki < 6; ki++)
-    for (int mi = 0; mi < 7; mi++) {
+    for (int mi = 0; mi < 10; mi++) {
         double g = bench(MCs[mi], KCs[ki], NC, n, reps);
         printf("%4d %4d %4d %.3f\n", (int)MCs[mi], (int)KCs[ki], (int)NC, g);
         fflush(stdout);

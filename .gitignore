@@ -1,5 +1,11 @@
 deps/
+plan.md
+coding-skill.md
+framing.md
+theory/*.md
 experiments/gemm/blis_sweep
+experiments/fft/fftw_sweep
+experiments/stencil/ceed_psweep
 *.o
 *.a
 *.so
