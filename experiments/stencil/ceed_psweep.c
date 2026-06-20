@@ -28,16 +28,10 @@ static double bench_basis(const char *ceed_spec, int p, int nelem, int reps) {
     CeedVectorCreate(ceed, (CeedInt)nelem * nqpts, &v);
     CeedVectorSetValue(u, 1.0);
 
-    /* warmup */
-    CeedBasisApply(basis, nelem, CEED_NOTRANSPOSE,
-                   CEED_EVAL_INTERP, u, v);
-    CeedDestroy(&ceed); /* flush */
-    CeedInit(ceed_spec, &ceed);
-    /* rebuild after destroy */
-    CeedBasisCreateTensorH1Lagrange(ceed, dim, 1, P, q, CEED_GAUSS, &basis);
-    CeedVectorCreate(ceed, (CeedInt)nelem * ndof, &u);
-    CeedVectorCreate(ceed, (CeedInt)nelem * nqpts, &v);
-    CeedVectorSetValue(u, 1.0);
+    /* warmup: 3 calls let the opt backend JIT-compile and stabilize */
+    for (int w = 0; w < 3; w++)
+        CeedBasisApply(basis, nelem, CEED_NOTRANSPOSE,
+                       CEED_EVAL_INTERP, u, v);
 
     struct timespec t0, t1;
     clock_gettime(CLOCK_MONOTONIC, &t0);

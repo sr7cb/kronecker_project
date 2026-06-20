@@ -54,12 +54,19 @@ int main(int argc, char **argv) {
     printf("# n=%d reps=%d\n", n, reps);
     printf("# MC KC NC GFLOPS\n");
 
-    dim_t KCs[] = {64, 128, 160, 256, 384, 512};
-    dim_t MCs[] = {36, 72, 120, 152, 200, 256, 384, 448, 512, 640};
+    /* KC sweep: below/at/above the KC that packs B strip into L2 */
+    dim_t KCs[] = {64, 128, 256, 512};
+    /* MC sweep: from MR baseline through L2 boundary (~1024 at KC=256)
+       and into L3, up to n itself.  n=2048 keeps all three matrices in
+       L3 so the L3→DRAM boundary is NOT visible here; that requires a
+       separate large-n run (see blis_sweep_largen). */
+    dim_t MCs[] = {36, 72, 120, 200, 256, 384, 512, 640, 768, 1024,
+                   1280, 1536, 2048};
     dim_t NC    = 4080;
 
-    for (int ki = 0; ki < 6; ki++)
-    for (int mi = 0; mi < 10; mi++) {
+    int nKC = 4, nMC = 13;
+    for (int ki = 0; ki < nKC; ki++)
+    for (int mi = 0; mi < nMC; mi++) {
         double g = bench(MCs[mi], KCs[ki], NC, n, reps);
         printf("%4d %4d %4d %.3f\n", (int)MCs[mi], (int)KCs[ki], (int)NC, g);
         fflush(stdout);

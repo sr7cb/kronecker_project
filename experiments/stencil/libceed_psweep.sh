@@ -1,6 +1,9 @@
 #!/bin/bash
 # Sweep polynomial order p for 3D diffusion (libCEED bp3 benchmark)
 # Factor size is p; optimal window predicted by shared-mem / cache capacity.
+# libCEED ref backend uses VLAs for tmp arrays; large nelem*p combos overflow
+# the default 8 MB stack. Unlimited stack is required.
+ulimit -s unlimited
 
 CEED_DIR=../../deps/libceed
 OUT=libceed_psweep.csv
